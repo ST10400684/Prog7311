@@ -1,0 +1,115 @@
+﻿@model EmployeeDashboardViewModel
+
+@{
+    ViewData["Title"] = "Employee Dashboard";
+}
+
+<div class="container">
+    <h1>Employee Dashboard</h1>
+
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Farmers</div>
+                <div class="card-body">
+                    <h5 class="card-title">@Model.FarmerCount</h5>
+                    <p class="card-text">Registered farmers</p>
+                    <a asp-controller="Farmer" asp-action="Index" class="btn btn-outline-light">View All</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Products</div>
+                <div class="card-body">
+                    <h5 class="card-title">@Model.ProductCount</h5>
+                    <p class="card-text">Total products registered</p>
+                    <a href="#productsByCategory" class="btn btn-outline-light">View Details</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-header">Categories</div>
+                <div class="card-body">
+                    <h5 class="card-title">@Model.CategoryCount</h5>
+                    <p class="card-text">Product categories</p>
+                    <a href="#" class="btn btn-outline-light">Manage Categories</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Recently Registered Farmers</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Farm</th>
+                                <th>Registration</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var farmer in Model.Farmers.OrderByDescending(f => f.RegistrationDate).Take(5))
+                            {
+                                <tr>
+                                    <td>@farmer.FarmerName</td>
+                                    <td>@farmer.FarmName</td>
+                                    <td>@(farmer.RegistrationDate?.ToString("yyyy-MM-dd"))</td>
+                                    <td>
+                                        <a asp-controller="Product" asp-action="List" asp-route-farmerId="@farmer.FarmerId" class="btn btn-sm btn-primary">Products</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6" id="productsByCategory">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Products by Category</h3>
+                </div>
+                <div class="card-body">
+                    <canvas id="productCategoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Sample chart data - you would generate this server-side
+        const ctx = document.getElementById('productCategoryChart');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Fruits', 'Vegetables', 'Dairy', 'Grains'],
+                datasets: [{
+                    label: 'Products by Category',
+                    data: [12, 19, 3, 5],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)'
+                    ],
+                    borderWidth: 1
+                }]
+            }
+        });
+    </script>
+}

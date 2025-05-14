@@ -1,0 +1,87 @@
+﻿@model FarmerDashboardViewModel
+
+@{
+    ViewData["Title"] = "Farmer Dashboard";
+}
+
+<div class="container">
+    <h1>Welcome, @Model.Farmer.FarmerName</h1>
+    <p>Farm: @Model.Farmer.FarmName | Location: @Model.Farmer.Location</p>
+
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Products</div>
+                <div class="card-body">
+                    <h5 class="card-title">@Model.ProductCount</h5>
+                    <p class="card-text">Total products registered</p>
+                    <a asp-controller="Product" asp-action="MyProducts" class="btn btn-outline-light">View Products</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Quick Add</div>
+                <div class="card-body">
+                    <h5 class="card-title">Add New Product</h5>
+                    <p class="card-text">Quickly add a new product to your inventory</p>
+                    <a asp-controller="Product" asp-action="Create" class="btn btn-outline-light">Add Product</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-header">Account Info</div>
+                <div class="card-body">
+                    <h5 class="card-title">Profile</h5>
+                    <p class="card-text">View and edit your profile details</p>
+                    <a href="#" class="btn btn-outline-light">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Recent Products</h3>
+                </div>
+                <div class="card-body">
+                    @if (Model.RecentProducts != null && Model.RecentProducts.Any())
+                    {
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>Production Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var product in Model.RecentProducts)
+                                {
+                                    <tr>
+                                        <td>@product.ProductName</td>
+                                        <td>@product.CategoryName</td>
+                                        <td>@product.ProductionDate?.ToString("yyyy-MM-dd")</td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-primary">Edit</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p>No recent products found.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

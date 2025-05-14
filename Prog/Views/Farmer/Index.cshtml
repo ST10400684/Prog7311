@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Farmer>
+
+@{
+    ViewData["Title"] = "Farmers";
+}
+
+<div class="container">
+    <h1>Farmers</h1>
+
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Add New Farmer</a>
+    </p>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>Farmer List</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Farm Name</th>
+                        <th>Location</th>
+                        <th>Contact</th>
+                        <th>Registration Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var farmer in Model)
+                    {
+                        <tr>
+                            <td>@farmer.FarmerId</td>
+                            <td>@farmer.FarmerName</td>
+                            <td>@farmer.FarmName</td>
+                            <td>@farmer.Location</td>
+                            <td>@farmer.ContactNumber</td>
+                            <td>@(farmer.RegistrationDate?.ToString("yyyy-MM-dd"))</td>
+                            <td>
+                                <a asp-controller="Product" asp-action="List" asp-route-farmerId="@farmer.FarmerId" class="btn btn-info btn-sm">View Products</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
