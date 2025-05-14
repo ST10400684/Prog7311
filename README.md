@@ -22,11 +22,11 @@ After unzipping the folder simply double click the "Prog.sln" file and the proje
 
 Login Details are as follows:
 
-Employee1    password123
-Employee2    password123
-Employee3    password123
-Employee4    password123
-Employee5    password123
+employee1    password123
+employee2    password123
+employee3    password123
+employee4    password123
+employee5    password123
 
 farmer1    password123
 farmer2    password123
