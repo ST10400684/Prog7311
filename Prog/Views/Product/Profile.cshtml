@@ -1,0 +1,45 @@
+﻿@model Prog.ViewModels.UserProfileViewModel
+
+@{
+    ViewData["Title"] = "User Profile";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card mt-4">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">User Profile</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4 fw-bold">Username:</div>
+                        <div class="col-md-8">@Model.Username</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 fw-bold">Email:</div>
+                        <div class="col-md-8">@Model.Email</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 fw-bold">Role:</div>
+                        <div class="col-md-8">@Model.UserRole</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 fw-bold">Account Created:</div>
+                        <div class="col-md-8">@Model.CreatedDate.ToString</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 fw-bold">Last Login:</div>
+                        <div class="col-md-8">
+                            @(Model.LastLogin.HasValue ? Model.LastLogin.Value.ToString("MMM dd, yyyy HH:mm") : "Never")
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a asp-action="EditProfile" class="btn btn-primary">Edit Profile</a>
+                    <a asp-action="ChangePassword" class="btn btn-secondary">Change Password</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

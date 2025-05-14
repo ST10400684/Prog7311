@@ -3,13 +3,11 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Prog.Models;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 using Prog.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Prog.ViewModels;
+using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
 
 namespace Prog.Controllers
 {
@@ -85,6 +83,30 @@ namespace Prog.Controllers
             return View(model);
         }
 
+        // GET: Account/Profile
+        [Authorize]
+        public async Task<IActionResult> Profile()
+        {
+            var userId = int.Parse(User.FindFirstValue("UserId"));
+            var user = await _context.Users.FindAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new ViewModels.UserProfileViewModel
+            {
+                Username = user.Username,
+                Email = user.Email,
+                UserRole = user.UserRole,
+                CreatedDate = user.CreatedDate ?? DateTime.Now,
+                LastLogin = user.LastLogin
+            };
+
+            return View(viewModel);
+        }
+
         // New Code
         [HttpGet]
         public IActionResult ForgotPassword()
@@ -118,24 +140,6 @@ namespace Prog.Controllers
             }
 
             return View(model);
-        }
-
-        // For a more robust password policy, add validation in the FarmerCreateViewModel
-        public class FarmerCreateViewModel
-        {
-            [Required]
-            [Display(Name = "Username")]
-            [StringLength(50, MinimumLength = 4)]
-            public string Username { get; set; }
-
-            [Required]
-            [Display(Name = "Password")]
-            [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters")]
-            [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$",
-                ErrorMessage = "Password must include uppercase, lowercase, number and special character")]
-            public string Password { get; set; }
-
-            // Other properties...
         }
 
         public class ForgotPasswordViewModel
@@ -242,6 +246,15 @@ namespace Prog.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult AccessDenied(string returnUrl = null)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return View(); // this looks for AccessDenied.cshtml by default
+        }
+
+
+
         // Method to help migrate your database to secure password storage
         [HttpGet]
         [Route("/Admin/MigratePasswords")]
@@ -274,12 +287,5 @@ namespace Prog.Controllers
 
             return Content("No passwords needed migration");
         }
-    }
-
-    public class LoginViewModel
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public bool RememberMe { get; set; }
     }
 }

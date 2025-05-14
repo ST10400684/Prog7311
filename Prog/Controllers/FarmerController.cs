@@ -5,11 +5,12 @@ using Prog.Models;
 using System.Security.Cryptography;
 using System.Text;
 using Prog.ViewModels;
+using System.Security.Claims;
 
 
 namespace Prog.Controllers
 {
-    [Authorize(Roles = "Employee")]
+    [Authorize(Roles = "Employee,Farmer")]
     public class FarmerController : Controller
     {
         private readonly AgriEnergyConnectContext _context;
@@ -20,6 +21,7 @@ namespace Prog.Controllers
         }
 
         // GET: Farmer
+        [Authorize(Roles = "Employee")]  // Only employees can see all farmers
         public async Task<IActionResult> Index()
         {
             var farmers = await _context.Farmers
@@ -29,7 +31,32 @@ namespace Prog.Controllers
             return View(farmers);
         }
 
+        [Authorize(Roles = "Farmer")]  // Only farmers can access their dashboard
+        public async Task<IActionResult> Dashboard()
+        {
+            var userId = int.Parse(User.FindFirstValue("UserId"));
+            var farmer = await _context.Farmers
+                .Include(f => f.User)
+                .FirstOrDefaultAsync(f => f.UserId == userId);
+
+            if (farmer == null)
+                return NotFound("Farmer not found");
+
+            var productCount = await _context.Products
+                .CountAsync(p => p.FarmerId == farmer.FarmerId);
+
+            var model = new FarmerDashboardViewModel
+            {
+                Farmer = farmer,
+                ProductCount = productCount
+            };
+
+            return View(model); // looks for /Views/Farmer/Dashboard.cshtml
+        }
+
+
         // GET: Farmer/Create
+        [Authorize(Roles = "Employee")]  // Only employees can create new farmers
         public IActionResult Create()
         {
             return View();
@@ -38,6 +65,7 @@ namespace Prog.Controllers
         // POST: Farmer/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Employee")]  // Only employees can create new farmers
         public async Task<IActionResult> Create(FarmerCreateViewModel model)
         {
             if (ModelState.IsValid)
@@ -86,6 +114,8 @@ namespace Prog.Controllers
             return View(model);
         }
 
+
+
         // Helper methods for password hashing
         private string GenerateSalt()
         {
@@ -108,16 +138,5 @@ namespace Prog.Controllers
                 return $"{iterations}:{Convert.ToBase64String(salt)}:{Convert.ToBase64String(hash)}";
             }
         }
-    }
-
-    public class FarmerCreateViewModel
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string Email { get; set; }
-        public string FarmerName { get; set; }
-        public string FarmName { get; set; }
-        public string Location { get; set; }
-        public string ContactNumber { get; set; }
     }
 }

@@ -22,6 +22,9 @@ namespace Prog.ViewModels
         [Range(1, int.MaxValue, ErrorMessage = "Please select a category")]
         public int CategoryId { get; set; }
 
+        [Display(Name = "Or Enter New Category")]
+        public string? CustomCategoryName { get; set; }
+
         [Required]
         [Display(Name = "Production Date")]
         [DataType(DataType.Date)]

@@ -1,0 +1,84 @@
+﻿@model IEnumerable<Prog.Models.ProductFullView>
+@{
+    ViewData["Title"] = "Products";
+}
+
+<h2>Products</h2>
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <form method="get" class="form-inline">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="categoryId">Category:</label>
+                        <select name="categoryId" id="categoryId" class="form-control">
+                            <option value="">All Categories</option>
+                            @if (ViewData["Categories"] != null)
+                            {
+                                foreach (var item in (SelectList)ViewData["Categories"])
+                                {
+                                    if (ViewData["SelectedCategoryId"] != null && item.Value == ViewData["SelectedCategoryId"].ToString())
+                                    {
+                                        <option value="@item.Value" selected>@item.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="startDate">Start Date:</label>
+                        <input type="date" name="startDate" id="startDate" class="form-control"
+                               value="@(ViewData["StartDate"]?.ToString() ?? "")" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="endDate">End Date:</label>
+                        <input type="date" name="endDate" id="endDate" class="form-control"
+                               value="@(ViewData["EndDate"]?.ToString() ?? "")" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>&nbsp;</label><br />
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                        <a asp-action="List" asp-route-farmerId="@ViewData["FarmerId"]" class="btn btn-secondary">Clear</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Category</th>
+            <th>Production Date</th>
+            <th>Created Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ProductName</td>
+                <td>@item.CategoryName</td>
+                <td>@item.ProductionDate</td>
+                <td>@item.CreatedDate</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-sm btn-info">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
