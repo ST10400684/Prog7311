@@ -20,6 +20,22 @@ The project uses a local SQLite database file (`AgriEnergyConnect.db`). No addit
 
 After unzipping the folder simply double click the "Prog.sln" file and the project will open in visual studio
 
+Login Details are as follows:
+
+Employee1    password123
+Employee2    password123
+Employee3    password123
+Employee4    password123
+Employee5    password123
+
+farmer1    password123
+farmer2    password123
+farmer3    password123
+farmer4    password123
+farmer5    password123
+
+![image](https://github.com/user-attachments/assets/7802dbb7-f8bf-4f19-945f-c008356fded5)
+
 
 Features:
 
